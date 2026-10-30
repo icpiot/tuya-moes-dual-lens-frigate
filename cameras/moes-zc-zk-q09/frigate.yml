@@ -1,0 +1,49 @@
+# Public example only. Replace the address and password locally.
+# 192.0.2.50 is a documentation-only TEST-NET address.
+
+go2rtc:
+  streams:
+    q09_sub_upper:
+      - "ffmpeg:rtsp://admin:<camera-password>@192.0.2.50:8554/stream1#video=h264#filter=crop=640:360:0:0"
+    q09_sub_lower:
+      - "ffmpeg:rtsp://admin:<camera-password>@192.0.2.50:8554/stream1#video=h264#filter=crop=640:360:0:360"
+    q09_main_upper:
+      - "ffmpeg:rtsp://admin:<camera-password>@192.0.2.50:8554/stream0#video=h264#filter=crop=2560:1440:0:0"
+    q09_main_lower:
+      - "ffmpeg:rtsp://admin:<camera-password>@192.0.2.50:8554/stream0#video=h264#filter=crop=2560:1440:0:1440"
+
+cameras:
+  q09_upper:
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:1984/api/stream.mjpeg?src=q09_sub_upper
+          roles: [detect]
+        - path: rtsp://127.0.0.1:1984/api/stream.mjpeg?src=q09_main_upper
+          roles: [record]
+    detect:
+      width: 640
+      height: 360
+      fps: 5
+    record:
+      enabled: true
+
+  q09_lower:
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:1984/api/stream.mjpeg?src=q09_sub_lower
+          roles: [detect]
+        - path: rtsp://127.0.0.1:1984/api/stream.mjpeg?src=q09_main_lower
+          roles: [record]
+    detect:
+      width: 640
+      height: 360
+      fps: 5
+    record:
+      enabled: true
+
+detectors:
+  cpu1:
+    type: cpu
+
+record:
+  enabled: true
